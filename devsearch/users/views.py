@@ -1,4 +1,5 @@
 from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.shortcuts import render, redirect
@@ -81,3 +82,15 @@ def user_profile(request, pk):
         'other_skills': other_skills,
     }
     return render(request, 'users/user_profile.html', context)
+
+@login_required(login_url='login')
+def user_account(request):
+    profile = request.user.profile
+    skills = profile.skill_set.all()
+    projects = profile.project_set.all()
+    context ={
+        'profile': profile,
+        'skills': skills,
+        'projects': projects,
+    }
+    return render(request, 'users/account.html', context)
