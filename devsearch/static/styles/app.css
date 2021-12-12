@@ -70,6 +70,14 @@ img {
   pointer-events: all;
 }
 
+/*
+trying to fix the gap
+---------------------
+a.project {
+    width: 100%;
+}
+*/
+
 .project--thumbnail {
   height: 250px;
   object-fit: cover;
