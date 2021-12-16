@@ -67,7 +67,7 @@ def register_view(request):
 
 def profiles(request):
     profiles, search_query = search_profiles(request)
-    custom_range, profiles = pagination_profiles(request, profiles, 1)
+    custom_range, profiles = pagination_profiles(request, profiles, 6)
     context = {
         'profiles': profiles,
         'search_query': search_query,
