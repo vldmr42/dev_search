@@ -6,7 +6,7 @@ from django.db.models import Q
 from django.shortcuts import render, redirect
 
 from users.models import Profile, Skill
-from .forms import CustomUserCreationForm, ProfileForm, SkillForm
+from .forms import CustomUserCreationForm, ProfileForm, SkillForm, MessageForm
 from .utils import search_profiles, pagination_profiles
 
 
@@ -174,5 +174,54 @@ def delete_skill(request, pk):
 
 @login_required(login_url='login')
 def inbox(request):
-    context = {}
+    profile = request.user.profile
+    message_request = profile.messages.all()
+    unread_count = message_request.filter(is_read=False).count()
+    context = {
+        'message_request': message_request,
+        'unread_count': unread_count,
+    }
     return render(request, 'users/inbox.html', context)
+
+
+@login_required(login_url='login')
+def view_message(request, pk):
+    profile = request.user.profile
+    message = profile.messages.get(id=pk)
+    if message.is_read is False:
+        message.is_read = True
+        message.save()
+    context = {
+        'message': message
+    }
+    return render(request, 'users/message.html', context)
+
+
+def create_message(request, pk):
+    recipient = Profile.objects.get(id=pk)
+    form = MessageForm()
+
+    try:
+        sender = request.user.profile
+    except:
+        sender = None
+
+    if request.method == 'POST':
+        form = MessageForm(request.POST)
+        if form.is_valid():
+            message = form.save(commit=False)
+            message.sender = sender
+            message.recipient = recipient
+
+            if sender:
+                message.name = sender.name
+                message.email = sender.email
+            message.save()
+
+            messages.success(request, 'Your message was succesfully sent')
+            return redirect('user_profile', pk=recipient.id)
+    context = {
+        'recipient': recipient,
+        'form': form,
+    }
+    return render(request, 'users/message_form.html', context)
