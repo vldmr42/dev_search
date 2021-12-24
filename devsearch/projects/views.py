@@ -64,7 +64,7 @@ def create_project(request):
 @login_required(login_url='login')
 def update_project(request, pk):
     profile = request.user.profile
-    project = profile.objects_set.get(id=pk)
+    project = profile.project_set.get(id=pk)
     form = ProjectForm(instance=project)
 
     if request.method == 'POST':
@@ -74,11 +74,12 @@ def update_project(request, pk):
         if form.is_valid():
             project = form.save()
             for tag in newtags:
-                tag, created = Tag.objects.get_or_created(name=tag)
+                tag, created = Tag.objects.get_or_create(name=tag)
                 project.tags.add(tag)
             return redirect('account')
     context = {
         'form': form,
+        'project': project,
     }
     return render(request, 'projects/project_form.html', context)
 
