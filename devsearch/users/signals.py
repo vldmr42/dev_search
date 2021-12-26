@@ -15,7 +15,7 @@ def user_created(sender, instance, created, **kwargs):
             user=user,
             username=user.username,
             email=user.email,
-            name=user.first_name,
+            name=user.username,
         )
 
         subject = 'Welcome to DevSearch.'
