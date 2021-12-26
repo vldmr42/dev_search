@@ -28,6 +28,8 @@ def user_created(sender, instance, created, **kwargs):
             [profile.email],
             fail_silently=False,
         )
+
+
 @receiver(post_save, sender=Profile)
 def update_user(sender, instance, created, **kwargs):
     profile = instance
@@ -41,5 +43,8 @@ def update_user(sender, instance, created, **kwargs):
 
 @receiver(post_delete, sender=Profile)
 def delete_user(sender, instance, **kwargs):
-    user = instance.user
-    user.delete()
+    try:
+        user = instance.user
+        user.delete()
+    except:
+        pass
