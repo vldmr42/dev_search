@@ -70,14 +70,6 @@ img {
   pointer-events: all;
 }
 
-/*
-trying to fix the gap
----------------------
-a.project {
-    width: 100%;
-}
-*/
-
 .project--thumbnail {
   height: 250px;
   object-fit: cover;
@@ -852,4 +844,20 @@ a.project {
   color: var(--color-sub);
   margin-bottom: 1rem;
   margin-top: 2rem;
+}
+
+
+
+/*=======================
+  Fixed Position Alerts Wrapper
+========================*/
+
+.alert {
+  position: fixed;
+  left: 50%;
+  top: 120px;
+  transform: translate(-50%, -50%);
+
+
+  z-index: 99999;
 }
